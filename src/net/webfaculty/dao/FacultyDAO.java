@@ -37,13 +37,18 @@ public class FacultyDAO {
 			+ "        ON fac.teacher_id = teach.id \r\n"
 			+ "        WHERE fac.id=?\r\n";
 	
-	private static final String SELECT_FACULTY_BY_STUDENT_ID = "SELECT fac.id,fac.name, fac.hours, fac.start, teach.first_name, teach.last_name, stf.satatus, stf.mark   \r\n"
+	private static final String SELECT_FACULTY_BY_STUDENT_ID = "SELECT fac.name, fac.hours, fac.start, teach.first_name, teach.last_name, stf.satatus, stf.mark, stf.faculty_id, stf.student_id   \r\n"
 			+ "        FROM facultys AS fac \r\n"
 			+ "        LEFT JOIN users AS teach \r\n"
 			+ "        ON teach.id = fac.teacher_id \r\n"
 			+ "        LEFT JOIN stud_in_faculty AS stf\r\n"
 			+ "        ON fac.id = stf.faculty_id \r\n"
 			+ "        WHERE stf.student_id=?\r\n";
+	private static final String SELECT_FACULTY_BY_TEACHER_ID = "SELECT fac.id,fac.name,fac.hours,fac.start, teach.first_name, teach.last_name \r\n"
+			+ 			"FROM facultys AS fac \r\n"
+			+ 			"LEFT JOIN users AS teach \r\n"
+			+ "        ON teach.id = fac.teacher_id \r\n"
+			+ "        WHERE teach.id=?\r\n";
 	
 	private static final String SELECT_FACULTY_TEACHER_ID_BY_ID = "SELECT teacher_id from facultys where id=?";
 	
@@ -122,7 +127,9 @@ public class FacultyDAO {
 				String last_name = rs.getString("last_name");
 				String status=rs.getString("satatus");
 				int mark = rs.getInt("mark");
-				facultys.add(new FacultyInfo(name, hours,start,first_name+" "+last_name,status,mark));
+				int std_id = rs.getInt("student_id");
+				int fac_id = rs.getInt("faculty_id");
+				facultys.add(new FacultyInfo(fac_id,std_id,name, hours,start,first_name+" "+last_name,status,mark));
 			}
 		} catch (SQLException e) {
 			printSQLException(e);
@@ -130,6 +137,28 @@ public class FacultyDAO {
 		return facultys;
 	}
 	
+	public List<Faculty> selectAllForTeacher(int teacher_id) {
+
+		List<Faculty> facultys = new ArrayList<>();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_FACULTY_BY_TEACHER_ID)) {
+			System.out.println(preparedStatement);
+			preparedStatement.setInt(1, teacher_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				int id= rs.getInt("id");
+				String name = rs.getString("name");
+				int hours = rs.getInt("hours");
+				Date start = rs.getDate("start");
+				String first_name = rs.getString("first_name");
+				String last_name = rs.getString("last_name");
+				facultys.add(new Faculty(id,name, hours,start,first_name+" "+last_name));
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+		return facultys;
+	}
 
 	public List<Faculty> selectAll() {
 

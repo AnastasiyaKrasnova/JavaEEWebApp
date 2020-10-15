@@ -6,6 +6,7 @@ public class StudToFac {
 	 	private int mark;
 	 	private String status;
 	 	
+	 	
 		public StudToFac(int student_id, int faculty_id, int mark, String status) {
 			super();
 			this.student_id = student_id;
@@ -13,6 +14,17 @@ public class StudToFac {
 			this.mark = mark;
 			this.status = status;
 		}
+		
+		
+
+		public StudToFac(int student_id, int faculty_id, String status) {
+			super();
+			this.student_id = student_id;
+			this.faculty_id = faculty_id;
+			this.status = status;
+		}
+
+
 
 		public int getStudent_id() {
 			return student_id;

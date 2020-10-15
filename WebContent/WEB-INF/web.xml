@@ -20,6 +20,8 @@
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/</url-pattern>
         <servlet-name>Student</servlet-name>
+        <servlet-name>Teacher</servlet-name>
+        <servlet-name>Common</servlet-name>
     </filter-mapping>
 
     <servlet>
@@ -42,7 +44,29 @@
 
     <servlet-mapping>
         <servlet-name>Student</servlet-name>
+        <url-pattern>/list_student</url-pattern>
+        <url-pattern>/leave_student</url-pattern>
+        <url-pattern>/join_student</url-pattern>
+    </servlet-mapping>
+    
+     <servlet>
+        <servlet-name>Teacher</servlet-name>
+        <servlet-class>net.webfaculty.controller.Teacher</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>Teacher</servlet-name>
+        <url-pattern>/list_teacher</url-pattern>
+    </servlet-mapping>
+    
+     <servlet>
+        <servlet-name>Common</servlet-name>
+        <servlet-class>net.webfaculty.controller.Common</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>Common</servlet-name>
         <url-pattern>/courses</url-pattern>
-        <url-pattern>/list</url-pattern>
+        <url-pattern>/profile</url-pattern>
     </servlet-mapping>
 </web-app>

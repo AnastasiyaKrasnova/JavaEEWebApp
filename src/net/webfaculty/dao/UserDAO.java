@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import net.webfaculty.model.User;
 
-public class LoginDAO {
+public class UserDAO {
 	
 	private ConnectionPool pool=ConnectionPool.getInstance();
 
@@ -18,6 +18,8 @@ public class LoginDAO {
 	private static final String GET_USER_BY_ID = "select id,first_name, last_name, email,password, role from users where id =?";
 	private static final String GET_USER_BY_EMAIL_PASSWORD = "select id,first_name, last_name, email,password, role from users where email =? and password=?";
 	private static final String GET_ROLE_BY_EMAIL_PASSWORD = "select role from users where email =? and password=?";
+	private static final String DELETE_USER_SQL = "delete from users where id = ?;";
+	private static final String UPDATE_USER_SQL = "update users set first_name=?, last_name=?, email=?, password=?, role=?  where id = ?;";
 	
 	public boolean createTable() {
 		boolean tableCreated=false;
@@ -104,6 +106,32 @@ public class LoginDAO {
 			printSQLException(e);
 		}
 		return role;
+	}
+	
+	public boolean deleteUser(int id) throws SQLException {
+		boolean rowDeleted;
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(DELETE_USER_SQL);) {
+			statement.setInt(1, id);
+			rowDeleted = statement.executeUpdate() > 0;
+		}
+		return rowDeleted;
+	}
+
+	public boolean updateUser(User user) throws SQLException {
+		boolean rowUpdated;
+		try (Connection connection = pool.getConnection();
+				PreparedStatement statement = connection.prepareStatement(UPDATE_USER_SQL);) {
+			statement.setString(1, user.getFirst_name());
+			statement.setString(2, user.getLast_name());
+			statement.setString(3, user.getEmail());
+			statement.setString(4, user.getPassword());
+			statement.setString(5, user.getRole());
+			statement.setInt(4, user.getId());
+
+			rowUpdated = statement.executeUpdate() > 0;
+		}
+		return rowUpdated;
 	}
 
 

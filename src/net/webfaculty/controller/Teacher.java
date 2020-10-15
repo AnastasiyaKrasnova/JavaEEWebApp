@@ -12,19 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.webfaculty.model.FacultyInfo;
-import net.webfaculty.model.StudToFac;
 import net.webfaculty.dao.FacultyDAO;
 import net.webfaculty.dao.StudentToFacultyDAO;
+import net.webfaculty.model.Faculty;
+import net.webfaculty.model.FacultyInfo;
 
-@WebServlet("/student")
-public class Student extends HttpServlet {
+
+@WebServlet("/teacher")
+public class Teacher extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private FacultyDAO facultyDAO=new FacultyDAO();
-	
 	private StudentToFacultyDAO stfDAO=new StudentToFacultyDAO();
        
-    public Student() {
+    public Teacher() {
+    	this.facultyDAO=new FacultyDAO();
         try{
 			createTable();
 		}
@@ -33,40 +34,26 @@ public class Student extends HttpServlet {
 		}
        
     }
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getServletPath();
 		System.out.println(action);
 			switch (action) {
-			case "/list_student":
+			case "/list_teacher":
 				try {
 					listMyFacultys(request, response);
 				}catch(SQLException e) {
 					e.printStackTrace();
 				}
 			break;
-			case "/leave_student":
-				try{
-					leaveCourse(request, response);
-				}
-				catch(SQLException e) {
-					e.printStackTrace();
-				}
-				break;
-			case "/join_student":
-				try{
-					joinCourse(request, response);
-				}
-				catch(SQLException e) {
-					e.printStackTrace();
-				}
-				break;
 			default:
 				break;
 			}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.doGet(request, response);
+		
+		doGet(request, response);
 	}
 	
 	private void createTable() throws SQLException{
@@ -76,30 +63,11 @@ public class Student extends HttpServlet {
 	private void listMyFacultys(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, IOException, ServletException {
 		final HttpSession session = request.getSession();
-		List<FacultyInfo> listFac = facultyDAO.selectAllForStudent((int)session.getAttribute("id")) ;
+		List<Faculty> listFac = facultyDAO.selectAllForTeacher((int)session.getAttribute("id")) ;
 		request.setAttribute("listFac", listFac);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("view/studentMain.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("view/teacherMain.jsp");
 		dispatcher.forward(request, response);
 	}
 	
-	
-	private void leaveCourse(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		final HttpSession session = request.getSession();
-		int id = Integer.parseInt(request.getParameter("id"));
-		stfDAO.delete((int)session.getAttribute("id"), id, request);
-		response.sendRedirect(request.getContextPath()+"/list_student");
-
-	}
-	
-	private void joinCourse(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
-		final HttpSession session = request.getSession();
-		int id = Integer.parseInt(request.getParameter("id"));
-		StudToFac stf=new StudToFac((int)session.getAttribute("id"),id,"PROGRESS");
-		stfDAO.insert(stf, request);
-		response.sendRedirect(request.getContextPath()+"/list_student");
-
-	}
 
 }

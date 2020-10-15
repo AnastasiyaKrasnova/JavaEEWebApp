@@ -2,13 +2,11 @@ package net.webfaculty.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.webfaculty.model.Faculty;
 import net.webfaculty.model.StudToFac;
 
 public class StudentToFacultyDAO {
@@ -25,13 +23,13 @@ public class StudentToFacultyDAO {
 			+ "  CONSTRAINT Constr_faculty_fk FOREIGN KEY faculty_fk (faculty_id) REFERENCES Facultys (id) ON DELETE CASCADE ON UPDATE CASCADE\r\n"
 			+ ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 	
-	private static final String INSERT_REALATION_SQL = "INSERT INTO Stud_in_Faculty" + " (student_id, faculty_id, status, mark) VALUES "
+	private static final String INSERT_REALATION_SQL = "INSERT INTO Stud_in_Faculty" + " (student_id, faculty_id, satatus, mark) VALUES "
 			+ " (?, ?, ?, ?);";
 
 	
 	private static final String DELETE_RELATION_SQL = "delete from Stud_in_Faculty where student_id = ? and faculty_id=?;";
 	
-	private static final String UPDATE_RELATION_SQL = "update Stud_in_Faculty set status = ?,mark= ? where student_id = ? and faculty_id=?;";
+	private static final String UPDATE_RELATION_SQL = "update Stud_in_Faculty set satatus = ?,mark= ? where student_id = ? and faculty_id=?;";
 	
 	public boolean createTable() {
 		boolean tableCreated=false;
@@ -67,11 +65,8 @@ public class StudentToFacultyDAO {
 				PreparedStatement statement = connection.prepareStatement(DELETE_RELATION_SQL);) {
 			statement.setInt(1, student_id);
 			statement.setInt(2, faculty_id);
-			
-			final HttpSession session = request.getSession();
-			if (isAvailableForStudent((int)session.getAttribute("id"),student_id))
-				rowDeleted = statement.executeUpdate() > 0;
-			else rowDeleted=false;
+			System.out.println(statement);
+			rowDeleted = statement.executeUpdate() > 0;
 		}
 		return rowDeleted;
 	}

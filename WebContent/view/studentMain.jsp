@@ -18,6 +18,8 @@
 			</div>
 
 			<ul class="navbar-nav">
+				<li><a href="<%=request.getContextPath()%>/list_student"
+					class="nav-link">Your courses</a></li>
 				<li>
     				<a href="<%=request.getContextPath()%>/courses" class="nav-link">Available Courses</a>
 				</li>
@@ -58,9 +60,8 @@
 							<td><c:out value="${fac.teacher_name}" /></td>
 							<td><c:out value="${fac.status}" /></td>
 							<td><c:out value="${fac.mark}" /></td>
-							<td><a href="edit?id=<c:out value='${user.id}' />">Leave Course</a>
-								&nbsp;&nbsp;&nbsp;&nbsp; <a
-								href="delete?id=<c:out value='${user.id}' />">Delete</a></td>
+							<td><a href="leave_student?id=<c:out value='${fac.faculty_id}' />">Leave Course</a>
+							</td>
 						</tr>
 					</c:forEach>
 					<!-- } -->

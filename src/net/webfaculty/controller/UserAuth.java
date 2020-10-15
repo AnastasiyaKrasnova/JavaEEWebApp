@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,14 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import net.webfaculty.dao.LoginDAO;
+import net.webfaculty.dao.UserDAO;
 import net.webfaculty.model.User;
 
 @WebServlet("/")
 
 public class UserAuth extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private static LoginDAO dao=new LoginDAO();   
+    private static UserDAO dao=new UserDAO();   
    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
@@ -118,14 +117,12 @@ public class UserAuth extends HttpServlet {
 			throws ServletException, IOException {
 
 		if (role.equals("STUDENT")) {
-			ServletContext servletContext = req.getServletContext();
-	        RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher("/list");
-	        requestDispatcher.forward(req, res);
+			res.sendRedirect(req.getContextPath()+"/list_student");
 
 	
 		} else if (role.equals("TEACHER")) {
 
-			req.getRequestDispatcher("view/teacherMain.jsp").forward(req, res);
+			res.sendRedirect(req.getContextPath()+"/list_teacher");
 
 		} else {
 			req.getRequestDispatcher("view/login.jsp").forward(req, res);
