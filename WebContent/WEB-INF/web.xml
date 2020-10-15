@@ -19,17 +19,30 @@
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/</url-pattern>
+        <servlet-name>Student</servlet-name>
     </filter-mapping>
 
     <servlet>
-        <servlet-name>Logout</servlet-name>
-        <servlet-class>net.webfaculty.controller.Logout</servlet-class>
+        <servlet-name>UserAuth</servlet-name>
+        <servlet-class>net.webfaculty.controller.UserAuth</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Logout</servlet-name>
+        <servlet-name>UserAuth</servlet-name>
         <url-pattern>/logout</url-pattern>
         <url-pattern>/register</url-pattern>
         <url-pattern>/insert</url-pattern>
+        <url-pattern>/route</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>Student</servlet-name>
+        <servlet-class>net.webfaculty.controller.Student</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Student</servlet-name>
+        <url-pattern>/courses</url-pattern>
+        <url-pattern>/list</url-pattern>
     </servlet-mapping>
 </web-app>

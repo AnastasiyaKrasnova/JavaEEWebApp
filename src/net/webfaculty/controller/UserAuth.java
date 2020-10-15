@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +17,7 @@ import net.webfaculty.model.User;
 
 @WebServlet("/")
 
-public class Logout extends HttpServlet {
+public class UserAuth extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private static LoginDAO dao=new LoginDAO();   
    
@@ -26,6 +27,7 @@ public class Logout extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getServletPath();
+		System.out.println(action);
 		try {
 			switch (action) {
 			case "/insert":
@@ -35,6 +37,9 @@ public class Logout extends HttpServlet {
 				catch(SQLException e) {
 					e.printStackTrace();
 				}
+				break;
+			case "/route":
+					checkSession(request, response);
 				break;
 			case "/register":
 				showRegisterForm(request, response);
@@ -56,13 +61,42 @@ public class Logout extends HttpServlet {
 	     session.removeAttribute("password");
 	     session.removeAttribute("email");
 	     session.removeAttribute("role");
+	     session.removeAttribute("id");
 	     response.sendRedirect(super.getServletContext().getContextPath());
 	}
 	
 	private void showRegisterForm(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("registrate.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("view/registrate.jsp");
 		dispatcher.forward(request, response);
+	}
+	
+	private void checkSession(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		final String email = request.getParameter("email");
+	    final String password = request.getParameter("password");
+	    
+		final HttpSession session = request.getSession();
+		if (session.getAttribute("email")!=null &&session.getAttribute("password")!=null) {
+
+            final String role = (String)session.getAttribute("role");
+            routeRole(request, response, role);
+
+
+        } else if (dao.getUserByEmailPassword(email, password)!=null) {
+
+            final User user = dao.getUserByEmailPassword(email, password);
+            request.getSession().setAttribute("password", password);
+            request.getSession().setAttribute("email", email);
+            request.getSession().setAttribute("role", user.getRole());
+            request.getSession().setAttribute("id", user.getId());
+
+            routeRole(request, response, user.getRole());
+
+        } else {
+
+        	 routeRole(request, response, "UNKNOWN");
+        }
 	}
 	
 	private void insertUser(HttpServletRequest request, HttpServletResponse response) 
@@ -78,6 +112,24 @@ public class Logout extends HttpServlet {
 		User newUser = new User(first_name,last_name, email, password,role);
 		dao.insertUser(newUser);
 		response.sendRedirect(request.getContextPath());
+	}
+	
+	private void routeRole(final HttpServletRequest req,final HttpServletResponse res,final String role)
+			throws ServletException, IOException {
+
+		if (role.equals("STUDENT")) {
+			ServletContext servletContext = req.getServletContext();
+	        RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher("/list");
+	        requestDispatcher.forward(req, res);
+
+	
+		} else if (role.equals("TEACHER")) {
+
+			req.getRequestDispatcher("view/teacherMain.jsp").forward(req, res);
+
+		} else {
+			req.getRequestDispatcher("view/login.jsp").forward(req, res);
+		}
 	}
 
 }
