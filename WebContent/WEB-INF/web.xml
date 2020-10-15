@@ -57,6 +57,14 @@
     <servlet-mapping>
         <servlet-name>Teacher</servlet-name>
         <url-pattern>/list_teacher</url-pattern>
+        <url-pattern>/new</url-pattern>
+        <url-pattern>/insert_faculty</url-pattern>
+        <url-pattern>/edit_faculty</url-pattern>
+        <url-pattern>/update_faculty</url-pattern>
+        <url-pattern>/delete_faculty</url-pattern>
+        <url-pattern>/course_students</url-pattern>
+        <url-pattern>/dismiss</url-pattern>
+        <url-pattern>/update_mark</url-pattern>
     </servlet-mapping>
     
      <servlet>

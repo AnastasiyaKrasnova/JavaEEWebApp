@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import net.webfaculty.model.Faculty;
 import net.webfaculty.model.FacultyInfo;
+import net.webfaculty.model.StudentMark;
 
 public class FacultyDAO {
 
@@ -56,6 +57,12 @@ public class FacultyDAO {
 			+ "        FROM facultys AS fac \r\n"
 			+ "        LEFT JOIN users AS teach\r\n"
 			+ "        ON fac.teacher_id = teach.id \r\n";
+	
+	private static final String SELECT_STUDENT_BY_FACULTY_ID="SELECT user.first_name, user.last_name, user.email, stf.satatus, stf.mark, stf.student_id   \r\n"
+			+ "        FROM users AS user \r\n"
+			+ "        LEFT JOIN  stud_in_faculty AS stf \r\n"
+			+ "        ON user.id = stf.student_id \r\n"
+			+ "        WHERE stf.faculty_id=?\r\n";
 	
 	private static final String DELETE_FACULTY_SQL = "delete from facultys where id = ?;";
 	
@@ -158,6 +165,29 @@ public class FacultyDAO {
 			printSQLException(e);
 		}
 		return facultys;
+	}
+	
+	public List<StudentMark> selectStudentsByFacultyId(int fac_id) {
+
+		List<StudentMark> students = new ArrayList<>();
+		try (Connection connection = pool.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_STUDENT_BY_FACULTY_ID)) {
+			System.out.println(preparedStatement);
+			preparedStatement.setInt(1, fac_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				String first_name = rs.getString("first_name");
+				String last_name = rs.getString("last_name");
+				String email = rs.getString("email");
+				String status= rs.getString("satatus");
+				int mark = rs.getInt("mark");
+				int student_id= rs.getInt("student_id");
+				students.add(new StudentMark(first_name,last_name,email,status,mark,student_id,fac_id));
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+		return students;
 	}
 
 	public List<Faculty> selectAll() {

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
-<title>Teacher Main Page</title>
+<title>Students at course</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -14,7 +14,7 @@
 		<nav class="navbar navbar-expand-md navbar-dark"
 			style="background-color: tomato">
 			<div>
-				<a href="https://www.javaguides.net" class="navbar-brand">Teacher Main Page</a>
+				<a href="https://www.javaguides.net" class="navbar-brand">Students of the course</a>
 			</div>
 
 			<ul class="navbar-nav">
@@ -36,34 +36,34 @@
 		<!-- <div class="alert alert-success" *ngIf='message'>{{message}}</div> -->
 
 		<div class="container">
-			<h3 class="text-center">Your courses</h3>
+			<h3 class="text-center">Students of the course</h3>
 			<hr>
 			<br>
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Hours</th>
-						<th>Start Date</th>
+						<th>First Name</th>
+						<th>Last Hours</th>
+						<th>Email</th>
+						<th>Status</th>
+						<th>Mark</th>
 					</tr>
 				</thead>
 				<tbody>
-					<!--   for (Todo todo: todos) {  -->
-					<c:forEach var="fac" items="${listFac}">
+					<c:forEach var="stud" items="${listStud}">
 
 						<tr>
-							<td><c:out value="${fac.name}" /></td>
-							<td><c:out value="${fac.hours}" /></td>
-							<td><c:out value="${fac.start}" /></td>
-							<td><a href="edit_faculty?id=<c:out value='${fac.id}' />">Edit</a>
+							<td><c:out value="${stud.first_name}" /></td>
+							<td><c:out value="${stud.last_name}" /></td>
+							<td><c:out value="${stud.email}" /></td>
+							<td><c:out value="${stud.status}" /></td>
+							<td><c:out value="${stud.mark}" /></td>
+							<td><a href="dismiss?student_id=<c:out value='${stud.student_id}' />&&faculty_id=<c:out value='${stud.faculty_id}' />">Dismiss student</a>
 							</td>
-							<td><a href="delete_faculty?id=<c:out value='${fac.id}' />">Delete</a>
-							</td>
-							<td><a href="course_students?id=<c:out value='${fac.id}' />">Students</a>
+							<td><a href="update_mark?student_id=<c:out value='${stud.student_id}' />&&faculty_id=<c:out value='${stud.faculty_id}' />">Update status</a>
 							</td>
 						</tr>
 					</c:forEach>
-					<!-- } -->
 				</tbody>
 
 			</table>

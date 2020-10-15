@@ -1,7 +1,10 @@
 package net.webfaculty.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -16,6 +19,7 @@ import net.webfaculty.dao.FacultyDAO;
 import net.webfaculty.dao.StudentToFacultyDAO;
 import net.webfaculty.model.Faculty;
 import net.webfaculty.model.FacultyInfo;
+import net.webfaculty.model.StudentMark;
 
 
 @WebServlet("/teacher")
@@ -45,7 +49,66 @@ public class Teacher extends HttpServlet {
 				}catch(SQLException e) {
 					e.printStackTrace();
 				}
-			break;
+				break;
+			case "/new":
+				showNewForm(request, response);
+				break;
+			case "/insert_faculty":
+				try{
+					insertFaculty(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "/delete_faculty":
+				try{
+					deleteFaculty(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "/edit_faculty":
+				try{
+					showEditForm(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "/update_faculty":
+				try{
+					updateFaculty(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "/course_students":
+				try{
+					selectStudents(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "/dismiss":
+				try{
+					updateFaculty(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "/update_mark":
+				try{
+					updateFaculty(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
 			default:
 				break;
 			}
@@ -66,6 +129,83 @@ public class Teacher extends HttpServlet {
 		List<Faculty> listFac = facultyDAO.selectAllForTeacher((int)session.getAttribute("id")) ;
 		request.setAttribute("listFac", listFac);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("view/teacherMain.jsp");
+		dispatcher.forward(request, response);
+	}
+	
+	private void showNewForm(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("view/newFaculty.jsp");
+		dispatcher.forward(request, response);
+	}
+	
+	private void insertFaculty(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		
+		response.setContentType("text/html; charset=utf8");
+        request.setCharacterEncoding("Utf8"); 
+		String name = request.getParameter("name");
+		int hours = Integer.parseInt(request.getParameter("hours"));
+		String start= request.getParameter("start");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    java.util.Date langDate = null;
+		try {
+			langDate = sdf.parse(start);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	    java.sql.Date sqlDate = new java.sql.Date(langDate.getTime());
+		Faculty fac = new Faculty(name,hours,sqlDate,"");
+		facultyDAO.insert(fac, request);
+		response.sendRedirect(request.getContextPath()+"/list_teacher");
+	}
+	
+	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Faculty fac=facultyDAO.selectById(id);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("view/newFaculty.jsp");
+		request.setAttribute("fac",fac);
+		dispatcher.forward(request, response);
+
+	}
+	
+	private void updateFaculty(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		
+		response.setContentType("text/html; charset=utf8");
+        request.setCharacterEncoding("Utf8"); 
+		int id = Integer.parseInt(request.getParameter("id"));
+		String name = request.getParameter("name");
+		String teacher_name = request.getParameter("teacher_name");
+		int hours = Integer.parseInt(request.getParameter("hours"));
+		String start= request.getParameter("start");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    java.util.Date langDate = null;
+		try {
+			langDate = sdf.parse(start);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	    java.sql.Date sqlDate = new java.sql.Date(langDate.getTime());
+		Faculty fac = new Faculty(id,name,hours,sqlDate,teacher_name);
+		facultyDAO.update(fac, request);
+		response.sendRedirect(request.getContextPath()+"/list_teacher");
+	}
+
+	private void deleteFaculty(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		facultyDAO.delete(id, request);
+		response.sendRedirect(request.getContextPath()+"/list_teacher");
+
+	}
+	
+	private void selectStudents(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException,ServletException{
+		int id = Integer.parseInt(request.getParameter("id"));
+		List<StudentMark> listStud= facultyDAO.selectStudentsByFacultyId(id);
+		request.setAttribute("listStud", listStud);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("view/studentList.jsp");
 		dispatcher.forward(request, response);
 	}
 	

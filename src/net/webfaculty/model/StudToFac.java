@@ -15,7 +15,6 @@ public class StudToFac {
 			this.status = status;
 		}
 		
-		
 
 		public StudToFac(int student_id, int faculty_id, String status) {
 			super();
