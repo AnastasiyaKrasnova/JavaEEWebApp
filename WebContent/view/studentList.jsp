@@ -60,7 +60,7 @@
 							<td><c:out value="${stud.mark}" /></td>
 							<td><a href="dismiss?student_id=<c:out value='${stud.student_id}' />&&faculty_id=<c:out value='${stud.faculty_id}' />">Dismiss student</a>
 							</td>
-							<td><a href="update_mark?student_id=<c:out value='${stud.student_id}' />&&faculty_id=<c:out value='${stud.faculty_id}' />">Update status</a>
+							<td><a href="edit_mark?student_id=<c:out value='${stud.student_id}' />&&faculty_id=<c:out value='${stud.faculty_id}' />">Update status</a>
 							</td>
 						</tr>
 					</c:forEach>

@@ -60,9 +60,9 @@
 							<td><c:out value="${user.last_name}" /></td>
 							<td><c:out value="${user.email}" /></td>
 							<td><c:out value="${user.role}" /></td>
-							<td><a href="edit_profile?id=<c:out value='${user.id}' />">Edit</a>
+							<td><a href="edit_user?id=<c:out value='${user.id}' />">Edit</a>
 							</td>
-							<td><a href="delete_profile?id=<c:out value='${user.id}' />">Delete</a>
+							<td><a href="delete_user?id=<c:out value='${user.id}' />">Delete</a>
 							</td>
 						</tr>
 					<!-- } -->

@@ -65,6 +65,7 @@
         <url-pattern>/course_students</url-pattern>
         <url-pattern>/dismiss</url-pattern>
         <url-pattern>/update_mark</url-pattern>
+        <url-pattern>/edit_mark</url-pattern>
     </servlet-mapping>
     
      <servlet>
@@ -76,5 +77,8 @@
         <servlet-name>Common</servlet-name>
         <url-pattern>/courses</url-pattern>
         <url-pattern>/profile</url-pattern>
+        <url-pattern>/edit_user</url-pattern>
+        <url-pattern>/update_user</url-pattern>
+        <url-pattern>/delete_user</url-pattern>
     </servlet-mapping>
 </web-app>

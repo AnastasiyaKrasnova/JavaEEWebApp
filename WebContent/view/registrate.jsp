@@ -10,13 +10,18 @@
 	crossorigin="anonymous">
 </head>
 <body>
-
 	<header>
 		<nav class="navbar navbar-expand-md navbar-dark"
 			style="background-color: tomato">
 			<div>
 				<a href="https://www.javaguides.net" class="navbar-brand">WEB FACULTY</a>
 			</div>
+			<c:if test="${user!= null}">
+				<ul class="navbar-nav">
+					<li><a href="<%=request.getContextPath()%>/profile"
+					class="nav-link">Your Profile</a></li>
+				</ul>
+			</c:if>
 		</nav>
 	</header>
 	<br>
@@ -26,39 +31,60 @@
 
 				<caption>
 					<h2>
+					<c:if test="${user!= null}">
+						Edit User
+					</c:if>
+					<c:if test="${user== null}">
 						REGISTRATION
+					</c:if>
 					</h2>
 				</caption>
-				<form method="post" action="insert">
+				<c:if test="${user!= null}">
+					<form method="post" action="update_user">
+				</c:if>
+				<c:if test="${user== null}">
+					<form method="post" action="insert">
+				</c:if>
 				<fieldset class="form-group">
 					<label>First Name</label> <input type="text"
-						value="firstname" class="form-control"
+						value="<c:out value='${user.first_name}' />" class="form-control"
 						name="first_name" required="required">
 				</fieldset>
 				<fieldset class="form-group">
 					<label>Last Name</label> <input type="text"
-						value="lastname" class="form-control"
+						value="<c:out value='${user.last_name}' />" class="form-control"
 						name="last_name" required="required">
 				</fieldset>
 				<fieldset class="form-group">
 					<label>Email</label> <input type="text"
-						value="email" class="form-control"
+						value="<c:out value='${user.email}' />" class="form-control"
 						name="email" required="required">
 				</fieldset>
 
 				<fieldset class="form-group">
 					<label>Password</label> <input type="password"
-						value="password" class="form-control"
+						value="*******" class="form-control"
 						name="password" required="required">
 				</fieldset>
 				<fieldset class="form-group">
+					<c:if test="${user== null}">
 					<label>Role</label> <p><select name="role">
     					<option selected value="STUDENT">STUDENT</option>
     					<option value="TEACHER">TEACHER</option>
    						</select></p>
+   					</c:if>
+   					<c:if test="${user!= null}">
+   					<label>Role</label> <input type="text"
+						value="<c:out value='${user.role}' />" class="form-control"
+						name="role" readonly>
+   					</c:if>
 				</fieldset>
-
+				<c:if test="${user!= null}">
+				<button type="submit" class="btn btn-success">Edit</button>
+				</c:if>
+				<c:if test="${user== null}">
 				<button type="submit" class="btn btn-success">REGISTRATE</button>
+				</c:if>
 				</form>
 		
 			</div>

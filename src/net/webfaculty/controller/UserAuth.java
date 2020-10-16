@@ -57,8 +57,6 @@ public class UserAuth extends HttpServlet {
 	private void logout(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
 		final HttpSession session = request.getSession();
-	     session.removeAttribute("password");
-	     session.removeAttribute("email");
 	     session.removeAttribute("role");
 	     session.removeAttribute("id");
 	     response.sendRedirect(super.getServletContext().getContextPath());
@@ -76,17 +74,14 @@ public class UserAuth extends HttpServlet {
 	    final String password = request.getParameter("password");
 	    
 		final HttpSession session = request.getSession();
-		if (session.getAttribute("email")!=null &&session.getAttribute("password")!=null) {
+		if (session.getAttribute("id")!=null &&session.getAttribute("role")!=null) {
 
-            final String role = (String)session.getAttribute("role");
-            routeRole(request, response, role);
+            routeRole(request, response, (String)session.getAttribute("role"));
 
 
         } else if (dao.getUserByEmailPassword(email, password)!=null) {
 
             final User user = dao.getUserByEmailPassword(email, password);
-            request.getSession().setAttribute("password", password);
-            request.getSession().setAttribute("email", email);
             request.getSession().setAttribute("role", user.getRole());
             request.getSession().setAttribute("id", user.getId());
 

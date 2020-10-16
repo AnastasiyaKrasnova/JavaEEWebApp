@@ -19,6 +19,7 @@ import net.webfaculty.dao.FacultyDAO;
 import net.webfaculty.dao.StudentToFacultyDAO;
 import net.webfaculty.model.Faculty;
 import net.webfaculty.model.FacultyInfo;
+import net.webfaculty.model.StudToFac;
 import net.webfaculty.model.StudentMark;
 
 
@@ -95,7 +96,15 @@ public class Teacher extends HttpServlet {
 				break;
 			case "/dismiss":
 				try{
-					updateFaculty(request, response);
+					dismissStudent(request, response);
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+				}
+				break;
+			case "/edit_mark":
+				try{
+					showEditFormMark(request, response);
 				}
 				catch(SQLException e) {
 					e.printStackTrace();
@@ -103,7 +112,7 @@ public class Teacher extends HttpServlet {
 				break;
 			case "/update_mark":
 				try{
-					updateFaculty(request, response);
+					updateMark(request, response);
 				}
 				catch(SQLException e) {
 					e.printStackTrace();
@@ -202,12 +211,58 @@ public class Teacher extends HttpServlet {
 	
 	private void selectStudents(HttpServletRequest request, HttpServletResponse response) 
 			throws SQLException, IOException,ServletException{
-		int id = Integer.parseInt(request.getParameter("id"));
+		final HttpSession session = request.getSession();
+		int id=-1;
+		if (session.getAttribute("faculty_id")==null)
+			id = Integer.parseInt(request.getParameter("id"));
+		else {
+			id=(int)session.getAttribute("faculty_id");
+			session.removeAttribute("faculty_id");
+		}
 		List<StudentMark> listStud= facultyDAO.selectStudentsByFacultyId(id);
 		request.setAttribute("listStud", listStud);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("view/studentList.jsp");
 		dispatcher.forward(request, response);
 	}
+	
+	private void dismissStudent(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		int stud_id = Integer.parseInt(request.getParameter("student_id"));
+		int fac_id = Integer.parseInt(request.getParameter("faculty_id"));
+		stfDAO.delete(stud_id, fac_id, request);
+		final HttpSession session = request.getSession();
+		session.setAttribute("faculty_id", fac_id);
+		response.sendRedirect(request.getContextPath()+"/course_students");
+
+	}
+	
+	private void showEditFormMark(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, ServletException, IOException {
+		int stud_id = Integer.parseInt(request.getParameter("student_id"));
+		int fac_id = Integer.parseInt(request.getParameter("faculty_id"));
+		StudentMark info = facultyDAO.selectStudentInfoByStudFacID(stud_id, fac_id);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("view/markEdit.jsp");
+		request.setAttribute("info", info);
+		dispatcher.forward(request, response);
+
+	}
+	
+	private void updateMark(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		
+		response.setContentType("text/html; charset=utf8");
+        request.setCharacterEncoding("Utf8"); 
+        int stud_id = Integer.parseInt(request.getParameter("student_id"));
+		int fac_id = Integer.parseInt(request.getParameter("faculty_id"));
+		int mark = Integer.parseInt(request.getParameter("mark"));
+		String status= request.getParameter("status");
+		StudToFac stf = new StudToFac(stud_id,fac_id,mark,status);
+		stfDAO.update(stf, request);
+		final HttpSession session = request.getSession();
+		session.setAttribute("faculty_id", fac_id);
+		response.sendRedirect(request.getContextPath()+"/course_students");
+	}
+
 	
 
 }

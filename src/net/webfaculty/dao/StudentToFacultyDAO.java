@@ -81,7 +81,7 @@ public class StudentToFacultyDAO {
 			statement.setInt(4, stf.getFaculty_id());
 			final HttpSession session = request.getSession();
 		
-			if (isAvailableForStudent((int)session.getAttribute("id"),stf.getStudent_id())||facultyDAO.isAvailableForTeacher((int)session.getAttribute("id"),stf.getFaculty_id()))
+			if (facultyDAO.isAvailableForTeacher((int)session.getAttribute("id"),stf.getFaculty_id()))
 				rowUpdated = statement.executeUpdate() > 0;
 			else rowUpdated=false;
 		}

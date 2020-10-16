@@ -2,6 +2,8 @@ package net.webfaculty.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -46,6 +48,30 @@ public class Common extends HttpServlet {
 				e.printStackTrace();
 			}
 			break;
+		case "/edit_user":
+			try{
+				showEditForm(request, response);
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		case "/update_user":
+			try{
+				updateUser(request, response);
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		case "/delete_user":
+			try{
+				deleteUser(request, response);
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+			break;
 		default:
 			break;
 		}
@@ -74,6 +100,42 @@ public class Common extends HttpServlet {
 		request.setAttribute("user", user);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("view/profile.jsp");
 		dispatcher.forward(request, response);
+	}
+	
+	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+			throws SQLException, ServletException, IOException {
+		final HttpSession session = request.getSession();
+		User user=userDAO.getUserById((int)session.getAttribute("id"));
+		request.setAttribute("user", user);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("view/registrate.jsp");
+		dispatcher.forward(request, response);
+
+	}
+	
+	private void updateUser(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		
+		response.setContentType("text/html; charset=utf8");
+        request.setCharacterEncoding("Utf8"); 
+        final HttpSession session = request.getSession();
+		int id = (int)session.getAttribute("id");
+		String first_name = request.getParameter("first_name");
+		String last_name = request.getParameter("last_name");
+		String email = request.getParameter("email");
+		String password =request.getParameter("password");
+		String role=(String)session.getAttribute("role");
+		User newUser = new User(id,first_name,last_name, email, password,role);
+		userDAO.updateUser(newUser);
+		response.sendRedirect(request.getContextPath()+"/profile");
+	}
+
+	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 
+			throws SQLException, IOException {
+		final HttpSession session = request.getSession();
+		int id = (int)session.getAttribute("id");
+		userDAO.deleteUser(id);
+		response.sendRedirect(request.getContextPath()+"/logout");
+
 	}
 
 }

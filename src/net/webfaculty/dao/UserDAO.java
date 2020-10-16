@@ -113,6 +113,7 @@ public class UserDAO {
 		try (Connection connection = pool.getConnection();
 				PreparedStatement statement = connection.prepareStatement(DELETE_USER_SQL);) {
 			statement.setInt(1, id);
+			System.out.println(statement);
 			rowDeleted = statement.executeUpdate() > 0;
 		}
 		return rowDeleted;
@@ -127,8 +128,8 @@ public class UserDAO {
 			statement.setString(3, user.getEmail());
 			statement.setString(4, user.getPassword());
 			statement.setString(5, user.getRole());
-			statement.setInt(4, user.getId());
-
+			statement.setInt(6, user.getId());
+			System.out.println(statement);
 			rowUpdated = statement.executeUpdate() > 0;
 		}
 		return rowUpdated;

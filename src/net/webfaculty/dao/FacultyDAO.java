@@ -45,6 +45,7 @@ public class FacultyDAO {
 			+ "        LEFT JOIN stud_in_faculty AS stf\r\n"
 			+ "        ON fac.id = stf.faculty_id \r\n"
 			+ "        WHERE stf.student_id=?\r\n";
+	
 	private static final String SELECT_FACULTY_BY_TEACHER_ID = "SELECT fac.id,fac.name,fac.hours,fac.start, teach.first_name, teach.last_name \r\n"
 			+ 			"FROM facultys AS fac \r\n"
 			+ 			"LEFT JOIN users AS teach \r\n"
@@ -63,6 +64,11 @@ public class FacultyDAO {
 			+ "        LEFT JOIN  stud_in_faculty AS stf \r\n"
 			+ "        ON user.id = stf.student_id \r\n"
 			+ "        WHERE stf.faculty_id=?\r\n";
+	private static final String SELECT_STUDENT_INFO_BY_STUD_FACULTY_ID="SELECT user.first_name, user.last_name, user.email, stf.satatus, stf.mark, stf.student_id   \r\n"
+			+ "        FROM users AS user \r\n"
+			+ "        LEFT JOIN  stud_in_faculty AS stf \r\n"
+			+ "        ON user.id = stf.student_id \r\n"
+			+ "        WHERE stf.faculty_id=? and stf.student_id=?\r\n";
 	
 	private static final String DELETE_FACULTY_SQL = "delete from facultys where id = ?;";
 	
@@ -188,6 +194,29 @@ public class FacultyDAO {
 			printSQLException(e);
 		}
 		return students;
+	}
+	
+	public StudentMark selectStudentInfoByStudFacID(int stud_id,int fac_id) {
+
+		StudentMark info = null;
+		try (Connection connection = pool.getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(SELECT_STUDENT_INFO_BY_STUD_FACULTY_ID)) {
+			System.out.println(preparedStatement);
+			preparedStatement.setInt(1, fac_id);
+			preparedStatement.setInt(2, stud_id);
+			ResultSet rs = preparedStatement.executeQuery();
+			while (rs.next()) {
+				String first_name = rs.getString("first_name");
+				String last_name = rs.getString("last_name");
+				String email = rs.getString("email");
+				String status= rs.getString("satatus");
+				int mark = rs.getInt("mark");
+				info=new StudentMark(first_name,last_name,email,status,mark,stud_id,fac_id);
+			}
+		} catch (SQLException e) {
+			printSQLException(e);
+		}
+		return info;
 	}
 
 	public List<Faculty> selectAll() {
