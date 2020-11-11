@@ -116,7 +116,6 @@ public class UserAuth extends HttpServlet {
 
 	
 		} else if (role.equals("TEACHER")) {
-
 			res.sendRedirect(req.getContextPath()+"/list_teacher");
 
 		} else {

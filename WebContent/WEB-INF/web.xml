@@ -23,6 +23,18 @@
         <servlet-name>Teacher</servlet-name>
         <servlet-name>Common</servlet-name>
     </filter-mapping>
+    
+    <filter>
+        <filter-name>RoleAccessFilter</filter-name>
+        <filter-class>net.webfaculty.controller.RoleAccessFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>RoleAccessFilter</filter-name>
+        <url-pattern>/</url-pattern>
+        <servlet-name>Teacher</servlet-name>
+        <servlet-name>Student</servlet-name>
+    </filter-mapping>
 
     <servlet>
         <servlet-name>UserAuth</servlet-name>
