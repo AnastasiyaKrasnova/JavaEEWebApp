@@ -46,6 +46,9 @@ public class UserAuth extends HttpServlet {
 			case "/logout":
 				logout(request, response);
 				break;
+			case "/change_lang":
+				changeLang(request, response);
+				break;
 			default:
 				break;
 			}
@@ -122,5 +125,19 @@ public class UserAuth extends HttpServlet {
 			req.getRequestDispatcher("view/login.jsp").forward(req, res);
 		}
 	}
+	
+	private void changeLang(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+	final HttpSession session = request.getSession();
+	
+	System.out.println(request.getServletPath());
+	String lang = request.getParameter("lang");
+	session.setAttribute("lang",lang);
+	if (request.getHeader("referer")==null) {
+		response.sendRedirect(request.getContextPath()+"/logout");
+	}
+	else
+		response.sendRedirect(request.getHeader("referer"));
+}
 
 }

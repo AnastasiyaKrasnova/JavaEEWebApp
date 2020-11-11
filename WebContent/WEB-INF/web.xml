@@ -10,7 +10,7 @@
 		<exception-type>java.lang.Exception</exception-type>
 		<location>/Error.jsp</location>
 	</error-page>
-	
+    
 	<filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>net.webfaculty.controller.AuthFilter</filter-class>
@@ -47,6 +47,7 @@
         <url-pattern>/register</url-pattern>
         <url-pattern>/insert</url-pattern>
         <url-pattern>/route</url-pattern>
+        <url-pattern>/change_lang</url-pattern>
     </servlet-mapping>
     
     <servlet>

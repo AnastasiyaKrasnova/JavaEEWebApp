@@ -26,6 +26,10 @@ public class AuthFilter implements Filter {
 		final HttpServletRequest req = (HttpServletRequest) request;
 	    final HttpServletResponse res = (HttpServletResponse) response;
 		final HttpSession session = req.getSession();
+		/*if (session.getAttribute("lang")==null) {
+			String lang=req.getLocale().getLanguage();
+			session.setAttribute("lang", lang);
+		}*/
 		if (session.getAttribute("id")==null &&session.getAttribute("role")==null) {
 			req.getRequestDispatcher("view/login.jsp").forward(req, res);
 		}

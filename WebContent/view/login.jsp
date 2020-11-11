@@ -12,7 +12,7 @@
 	crossorigin="anonymous">
 </head>
 <body>
-	<fmt:setLocale value="ru"/>
+	<fmt:setLocale value='<%=request.getSession().getAttribute("lang")%>'/>
 	<fmt:setBundle basename="resourses.lang" var="loc"/>
 	<fmt:message bundle="${loc}" key="lang.login.title" var="title"/>
 	<fmt:message bundle="${loc}" key="lang.login.email" var="mail"/>
@@ -24,6 +24,16 @@
 			style="background-color: tomato">
 			<div>
 				<a href="https://www.javaguides.net" class="navbar-brand">WEB FACULTY</a>
+			</div>
+			<div>
+				<form method="post" action="change_lang">
+					<input type="hidden" name="lang" value="ru" />
+					<input type="submit" value="RU" /></input>
+				</form>
+				<form method="post" action="change_lang">
+					<input type="hidden" name="lang" value="en" />
+					<input type="submit" value="EN" /></input>
+				</form>
 			</div>
 		</nav>
 	</header>
