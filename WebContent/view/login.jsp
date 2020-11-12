@@ -19,6 +19,7 @@
 	<fmt:message bundle="${loc}" key="lang.login.password" var="pass"/>
 	<fmt:message bundle="${loc}" key="lang.login.btn.sign_in" var="btn_text"/>
 	<fmt:message bundle="${loc}" key="lang.login.href.reg" var="href_text"/>
+	<fmt:message bundle="${loc}" key="lang.login.mistake.incorrect" var="mst_incorrect"/>
 	<header>
 		<nav class="navbar navbar-expand-md navbar-dark"
 			style="background-color: tomato">
@@ -64,7 +65,11 @@
 				</form>
 				
 				<a href="<%=request.getContextPath()%>/register"><c:out value="${href_text}"/></a>
+				
 			</div>
+			<c:if test="${mistake_num== 1}">
+			<label><c:out value="${mst_incorrect}"/></label>
+			</c:if>
 		</div>
 	</div>
 </body>

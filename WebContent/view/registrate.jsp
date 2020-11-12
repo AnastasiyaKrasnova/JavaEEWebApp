@@ -27,6 +27,7 @@
 	<fmt:message bundle="${loc}" key="lang.register.role.teacher" var="teach"/>
 	<fmt:message bundle="${loc}" key="lang.register.btn.edit" var="btn_edit"/>
 	<fmt:message bundle="${loc}" key="lang.register.btn.reg" var="btn_reg"/>
+	<fmt:message bundle="${loc}" key="lang.register.mistake.exists" var="mst_exists"/>
 	<header>
 		<nav class="navbar navbar-expand-md navbar-dark"
 			style="background-color: tomato">
@@ -128,6 +129,9 @@
 				</form>
 		
 			</div>
+			<c:if test="${mistake_num== 1}">
+			<label><c:out value="${mst_exists}"/></label>
+			</c:if>
 		</div>
 	</div>
 </body>

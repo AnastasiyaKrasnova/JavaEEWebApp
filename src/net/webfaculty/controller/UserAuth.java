@@ -97,7 +97,7 @@ public class UserAuth extends HttpServlet {
 	}
 	
 	private void insertUser(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+			throws SQLException, ServletException,IOException {
 		
 		response.setContentType("text/html; charset=utf8");
         request.setCharacterEncoding("Utf8"); 
@@ -107,8 +107,14 @@ public class UserAuth extends HttpServlet {
 		String password =request.getParameter("password");
 		String role =request.getParameter("role");
 		User newUser = new User(first_name,last_name, email, password,role);
-		dao.insertUser(newUser);
-		response.sendRedirect(request.getContextPath());
+		if (dao.getUserByEmail(email)==-1) {
+			dao.insertUser(newUser);
+			response.sendRedirect(request.getContextPath());
+		}
+		else {
+			request.setAttribute("mistake_num", 1);
+			request.getRequestDispatcher("view/registrate.jsp").forward(request, response);
+		}
 	}
 	
 	private void routeRole(final HttpServletRequest req,final HttpServletResponse res,final String role)
@@ -122,6 +128,7 @@ public class UserAuth extends HttpServlet {
 			res.sendRedirect(req.getContextPath()+"/list_teacher");
 
 		} else {
+			req.setAttribute("mistake_num", 1);
 			req.getRequestDispatcher("view/login.jsp").forward(req, res);
 		}
 	}
