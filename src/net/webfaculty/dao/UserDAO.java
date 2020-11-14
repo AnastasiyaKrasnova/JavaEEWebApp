@@ -6,13 +6,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
-
+import net.webfaculty.controller.AuthFilter;
 import net.webfaculty.model.User;
 
 public class UserDAO {
 	
+	private static final Logger log = Logger.getLogger(UserDAO.class);
 	private static String salt="Java2020";
 	private ConnectionPool pool=ConnectionPool.getInstance();
 
@@ -34,7 +37,8 @@ public class UserDAO {
 			tableCreated = statement.executeUpdate() > 0;
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
+			log.warn(e);
+			printSQLException(e);
 		} 
 		return tableCreated;
 	}
@@ -163,10 +167,13 @@ public class UserDAO {
 	}
 
 	public static String encrypt(String str) {
+		if (str!=null) {
+			BASE64Encoder encoder = new BASE64Encoder();
+			byte[] new_salt = salt.getBytes();
+			return encoder.encode(new_salt) + encoder.encode(str.getBytes());
+		}
+		return null;
 		
-		BASE64Encoder encoder = new BASE64Encoder();
-		byte[] new_salt = salt.getBytes();
-		return encoder.encode(new_salt) + encoder.encode(str.getBytes());
 	}
 		 
 	public static String decrypt(String encstr) {

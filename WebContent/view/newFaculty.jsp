@@ -24,6 +24,8 @@
 	<fmt:message bundle="${loc}" key="lang.column.header.hours" var="hours"/>
 	<fmt:message bundle="${loc}" key="lang.column.header.start_date" var="start_date"/>
 	<fmt:message bundle="${loc}" key="lang.edit_mark.btn.save" var="btn_save"/>
+	<fmt:message bundle="${loc}" key="lang.new_faculty.mistake.hours" var="mst_hours"/>
+	<fmt:message bundle="${loc}" key="lang.new_faculty.mistake.date" var="mst_date"/>
 	<header>
 		<nav class="navbar navbar-expand-md navbar-dark"
 			style="background-color: tomato">
@@ -69,10 +71,10 @@
 				<caption>
 					<h2>
 						<c:if test="${fac != null}">
-            			<c:out value="${cap_new}"/>
+            			<c:out value="${cap_edit}"/>
             		</c:if>
 						<c:if test="${fac == null}">
-            			<c:out value="${cap_edit}"/>
+            			<c:out value="${cap_new}"/>
             		</c:if>
 					</h2>
 				</caption>
@@ -103,6 +105,12 @@
 				<button type="submit" class="btn btn-success"><c:out value="${btn_save}"/></button>
 				</form>
 			</div>
+			<c:if test="${mistake_num== 1}">
+			<label style="color:ff0000"><c:out value="${mst_hours}"/></label>
+			</c:if>
+			<c:if test="${mistake_num== 2}">
+			<label style="color:ff0000"><c:out value="${mst_date}"/></label>
+			</c:if>
 		</div>
 	</div>
 </body>

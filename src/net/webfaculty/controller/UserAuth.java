@@ -1,6 +1,7 @@
 package net.webfaculty.controller;
 
 import java.io.IOException;
+import org.apache.log4j.Logger;
 import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
@@ -17,6 +18,7 @@ import net.webfaculty.model.User;
 @WebServlet("/")
 
 public class UserAuth extends HttpServlet {
+	//private static final Logger log = Logger.getLogger(UserAuth.class);
 	private static final long serialVersionUID = 1L;
     private static UserDAO dao=new UserDAO();   
    
@@ -27,6 +29,7 @@ public class UserAuth extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getServletPath();
 		System.out.println(action);
+		//log.info(action);
 		try {
 			switch (action) {
 			case "/insert":
@@ -75,7 +78,10 @@ public class UserAuth extends HttpServlet {
 			throws ServletException, IOException {
 		final String email = request.getParameter("email");
 	    final String password = request.getParameter("password");
-	    
+	    /*if (email==null||password==null) {
+	    	routeRole(request, response, "UNKNOWN");
+	    	return;
+	    }*/
 		final HttpSession session = request.getSession();
 		if (session.getAttribute("id")!=null &&session.getAttribute("role")!=null) {
 
@@ -91,7 +97,7 @@ public class UserAuth extends HttpServlet {
             routeRole(request, response, user.getRole());
 
         } else {
-
+        	
         	 routeRole(request, response, "UNKNOWN");
         }
 	}
@@ -129,6 +135,7 @@ public class UserAuth extends HttpServlet {
 
 		} else {
 			req.setAttribute("mistake_num", 1);
+			//res.sendRedirect(req.getContextPath()+"/logout");
 			req.getRequestDispatcher("view/login.jsp").forward(req, res);
 		}
 	}

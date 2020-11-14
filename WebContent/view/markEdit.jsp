@@ -27,6 +27,7 @@
 	<fmt:message bundle="${loc}" key="lang.edit_mark.status.progress" var="status_progr"/>
 	<fmt:message bundle="${loc}" key="lang.edit_mark.status.finished" var="status_finish"/>
 	<fmt:message bundle="${loc}" key="lang.edit_mark.status.problems" var="status_probl"/>
+	<fmt:message bundle="${loc}" key="lang.edit_mark.mistake.mark" var="mst_mark"/>
 	<header>
 		<nav class="navbar navbar-expand-md navbar-dark"
 			style="background-color: tomato">
@@ -107,6 +108,9 @@
 				<button type="submit" class="btn btn-success"><c:out value="${btn_save}"/></button>
 				</form>
 			</div>
+			<c:if test="${mistake_num== 1}">
+			<label style="color:ff0000"><c:out value="${mst_mark}"/></label>
+			</c:if>
 		</div>
 	</div>
 </body>

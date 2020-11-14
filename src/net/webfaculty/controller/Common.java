@@ -113,7 +113,7 @@ public class Common extends HttpServlet {
 	}
 	
 	private void updateUser(HttpServletRequest request, HttpServletResponse response) 
-			throws SQLException, IOException {
+			throws SQLException, IOException, ServletException {
 		
 		response.setContentType("text/html; charset=utf8");
         request.setCharacterEncoding("Utf8"); 
@@ -125,8 +125,18 @@ public class Common extends HttpServlet {
 		String password =request.getParameter("password");
 		String role=(String)session.getAttribute("role");
 		User newUser = new User(id,first_name,last_name, email, password,role);
-		userDAO.updateUser(newUser);
-		response.sendRedirect(request.getContextPath()+"/profile");
+		int new_id=userDAO.getUserByEmail(email);
+		if ( new_id==-1||id==new_id) {
+			userDAO.updateUser(newUser);
+			response.sendRedirect(request.getContextPath()+"/profile");
+		}
+		else {
+			request.setAttribute("mistake_num", 1);
+			User user=userDAO.getUserById((int)session.getAttribute("id"));
+			request.setAttribute("user", user);
+			request.getRequestDispatcher("view/registrate.jsp").forward(request, response);
+		}
+		
 	}
 
 	private void deleteUser(HttpServletRequest request, HttpServletResponse response) 

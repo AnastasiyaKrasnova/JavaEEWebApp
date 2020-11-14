@@ -68,7 +68,7 @@
 				
 			</div>
 			<c:if test="${mistake_num== 1}">
-			<label><c:out value="${mst_incorrect}"/></label>
+			<label style="color:ff0000"><c:out value="${mst_incorrect}"/></label>
 			</c:if>
 		</div>
 	</div>
